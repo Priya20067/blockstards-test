@@ -1,0 +1,274 @@
+/* ============================================================
+   bs_flat.css — Blockstards · primary UI (raffles/auctions/etc)
+   All color, radius, spacing, and type values come from the
+   global tokens in bs_fonts.css — this file only maps them onto
+   local, shorter var names used throughout the component CSS
+   below so the selectors themselves didn't need to change.
+   ============================================================ */
+
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --bg:var(--bg);
+  --card:var(--surface-1);
+  --card-2:var(--surface-2);
+  --line:var(--border-1);
+  --line-2:var(--border-2);
+  --text:var(--text-primary);
+  --sub:var(--text-secondary);
+  --sub-2:#bbbdba;
+  --dim:var(--text-tertiary);
+  --green:var(--accent-green);
+  --lime:var(--accent-lime);
+  --red:var(--accent-red);
+  --gold:var(--accent-gold);
+  --purple:var(--accent-purple);
+}
+
+html,body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:var(--fs-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:#1c1e23;border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:#282b31}
+input::placeholder{color:var(--dim)}
+a{color:inherit}
+img{max-width:100%}
+
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* ── Layout ── */
+.bs-layout{display:flex;min-height:100vh;background:var(--bg)}
+.bs-main{flex:1;min-width:0;padding:var(--sp-4) var(--sp-6) var(--sp-16);max-width:1600px;width:100%;margin:0 auto}
+
+/* ── Page header (top nav) ──
+   Compact 34px logo/avatar/bell row, everything on one vertical
+   center line, tighter internal spacing than before. */
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);margin-bottom:var(--sp-4);min-height:34px}
+.page-head-left{display:flex;align-items:center;gap:var(--sp-3);min-width:0;flex:1}
+.page-logo{width:34px;height:34px;border-radius:var(--radius-btn);overflow:hidden;background:var(--card-2);border:1px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.page-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.page-title{font-weight:var(--fw-bold);font-size:var(--fs-h5);line-height:1;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.page-head-right{display:flex;align-items:center;gap:var(--sp-3);flex-shrink:0}
+
+/* Wallet / $BLOX balance badge */
+.blox-pill{display:flex;align-items:center;gap:var(--sp-2);height:34px;padding:0 var(--sp-3) 0 var(--sp-2);border:1px solid var(--line-2);border-radius:var(--radius-btn);background:var(--card);transition:border-color var(--dur-fast),background var(--dur-fast);max-width:190px}
+.blox-pill:hover{border-color:var(--line-2);background:var(--card-2)}
+.blox-pill svg{flex-shrink:0;width:16px;height:16px}
+.blox-pill>div{min-width:0;display:flex;flex-direction:column;justify-content:center;line-height:1.2}
+.blox-pill-val{font-weight:700;font-size:12.5px;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.blox-pill-sub{font-size:10.5px;color:var(--dim);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* Avatar + notification bell — same 34px circle, evenly spaced */
+.head-avatar{width:34px;height:34px;border-radius:50%;overflow:hidden;background:var(--card-2);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--sub);text-decoration:none;flex-shrink:0;transition:border-color var(--dur-fast)}
+.head-avatar:hover{border-color:#3d4148}
+.head-avatar img{width:100%;height:100%;object-fit:cover}
+.head-bell{position:relative;width:34px;height:34px;border-radius:50%;background:transparent;border:1px solid transparent;display:flex;align-items:center;justify-content:center;color:var(--text);cursor:pointer;flex-shrink:0;text-decoration:none;transition:background var(--dur-fast),border-color var(--dur-fast)}
+.head-bell:hover{background:var(--card-2);border-color:var(--line-2)}
+.head-bell svg{width:17px;height:17px}
+.head-bell .bell-dot{position:absolute;top:-2px;right:-2px;min-width:15px;height:15px;padding:0 3px;border-radius:50%;background:var(--purple);color:#fff;font-size:8.5px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);box-sizing:content-box}
+.bs-discord-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:var(--radius-btn);background:#5865f2;color:#fff;font-weight:600;font-size:13px;text-decoration:none;transition:background var(--dur-fast);border:none;cursor:pointer;font-family:var(--font)}
+.bs-discord-btn:hover{background:#4752c4}
+
+
+
+/* ── Tabs (Live / Past / Ending Soon / My Bids) ──
+   OpenSea-style: quiet by default, clear filled-white active
+   state instead of a glow — the same treatment OpenSea uses for
+   its own filter tabs. */
+.pill-tabs{display:flex;align-items:center;gap:var(--sp-2);margin-bottom:var(--sp-4);flex-wrap:wrap}
+.pill-tab{display:inline-flex;align-items:center;gap:var(--sp-2);height:38px;padding:0 var(--sp-4);border-radius:var(--radius-btn);border:1px solid var(--line-2);background:transparent;color:var(--sub);font-weight:600;font-size:13.5px;text-decoration:none;cursor:pointer;transition:background var(--dur-fast),border-color var(--dur-fast),color var(--dur-fast);white-space:nowrap;font-family:var(--font)}
+.pill-tab svg{flex-shrink:0}
+.pill-tab:hover{background:var(--card-2);border-color:var(--line-2);color:var(--text)}
+.pill-tab.icon-only{width:38px;padding:0;justify-content:center;background:transparent}
+.pill-tab.active{background:#fff;border-color:#fff;color:#0a0c0f}
+.pill-tab.active svg{stroke:#0a0c0f}
+.pill-tab.icon-only.active{background:#fff}
+.pill-tab.icon-only.active svg{stroke:#0a0c0f}
+
+/* ── Banner (hero) ──
+   Taller, richer multi-stop gradient for legibility, text block
+   capped in width, image anchored slightly above-center so
+   subjects aren't cropped at the chin/shoulders. */
+.banner{position:relative;border-radius:var(--radius-hero);overflow:hidden;border:1px solid var(--line);background:var(--card);min-height:340px;margin-bottom:var(--sp-1)}
+.banner-media{position:absolute;inset:0}
+.banner-media img{width:100%;height:100%;object-fit:cover;object-position:center 38%;display:block;transition:transform 6s var(--ease)}
+.banner-scrim{position:absolute;inset:0;background:
+  linear-gradient(0deg,rgba(3,4,6,.88) 0%,rgba(3,4,6,.55) 24%,rgba(3,4,6,.15) 48%,rgba(3,4,6,0) 65%),
+  linear-gradient(100deg,rgba(3,4,6,.5) 0%,rgba(3,4,6,.12) 32%,rgba(3,4,6,0) 55%)}
+.banner-content{position:relative;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;min-height:340px;padding:var(--sp-8) var(--sp-8) var(--sp-6);max-width:640px}
+.banner-title{font-weight:var(--fw-bold);font-size:clamp(26px,3.1vw,var(--fs-h1));line-height:1.08;letter-spacing:-.02em;display:flex;align-items:center;gap:var(--sp-2);text-shadow:0 2px 20px rgba(0,0,0,.7)}
+.banner-sub{font-size:var(--fs-body);font-weight:var(--fw-medium);color:#d5d8dc;margin-top:var(--sp-2);text-shadow:0 1px 10px rgba(0,0,0,.7)}
+
+/* Prev / next nav arrows */
+.banner-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:4;width:38px;height:38px;border-radius:50%;background:rgba(6,7,9,.55);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;opacity:0;transition:opacity var(--dur-fast),background var(--dur-fast)}
+.banner:hover .banner-nav{opacity:1}
+.banner-nav:hover{background:rgba(6,7,9,.8)}
+.banner-nav.prev{left:var(--sp-4)}
+.banner-nav.next{right:var(--sp-4)}
+
+/* Indicators — idle dots, wider active pill */
+.banner-dots{position:absolute;bottom:var(--sp-4);left:50%;transform:translateX(-50%);z-index:3;display:flex;align-items:center;gap:6px}
+.banner-dot{width:7px;height:7px;border-radius:var(--radius-pill);background:rgba(255,255,255,.35);border:none;cursor:pointer;padding:0;transition:width var(--dur-base) var(--ease),background var(--dur-base)}
+.banner-dot:hover{background:rgba(255,255,255,.6)}
+.banner-dot.active{width:22px;background:#fff}
+
+/* Fade-crossfade slides (JS toggles .is-active instead of display) */
+.banner-slide{opacity:0;transition:opacity var(--dur-slow) var(--ease);pointer-events:none}
+.banner-slide.is-active{opacity:1;pointer-events:auto}
+
+.vbadge{display:inline-flex;flex-shrink:0}
+
+/* ── Section head ──
+   Title + subtitle stacked with clear hierarchy; "View all" link
+   baseline-aligned to the title, not the subtitle. */
+.sec{margin-top:var(--sp-10)}
+.sec-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);margin-bottom:var(--sp-4)}
+.sec-head>div:first-child{min-width:0}
+.sec-title{font-weight:var(--fw-bold);font-size:var(--fs-h4);line-height:1.25;letter-spacing:-.015em;color:var(--text)}
+.sec-sub{font-size:var(--fs-sm);color:var(--sub);margin-top:var(--sp-1);line-height:1.4}
+.sec-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--sub);text-decoration:none;white-space:nowrap;flex-shrink:0;padding:6px 2px;transition:color var(--dur-fast),gap var(--dur-fast)}
+.sec-link:hover{color:var(--text);gap:9px}
+
+/* ── Card grid ──
+   Consistent gutter, responsive column steps tuned to real
+   breakpoints (6 → 4 → 3 → 2 cols), and stretched items so every
+   card in a row shares the same height regardless of content. */
+/* ── Horizontal card carousel (OpenSea Featured-Collections style) ── */
+.card-carousel{position:relative}
+.card-row{display:flex;flex-wrap:nowrap;gap:var(--sp-4);align-items:stretch;overflow-x:auto;scroll-behavior:smooth;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 2px 8px}
+.card-row::-webkit-scrollbar{display:none}
+/* Carousel prev/next arrows */
+.carousel-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:40px;height:40px;border-radius:50%;background:rgba(20,21,25,.92);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;box-shadow:0 6px 20px -6px rgba(0,0,0,.7);transition:background var(--dur-fast) var(--ease),opacity var(--dur-fast) var(--ease)}
+.carousel-nav:hover{background:rgba(32,34,40,.98)}
+.carousel-nav.prev{left:-8px}
+.carousel-nav.next{right:-8px}
+.carousel-nav[disabled]{opacity:0;pointer-events:none}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:var(--sp-4);align-items:stretch}
+.card-grid .mcard{width:auto;flex:none}
+.mcard{position:relative;display:block;flex:0 0 340px;width:340px;aspect-ratio:1.5/1;scroll-snap-align:start;border:1px solid var(--line);border-radius:var(--radius-card);overflow:hidden;background:var(--card);text-decoration:none;cursor:pointer;transition:transform var(--dur-fast) var(--ease),box-shadow var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease);text-align:left;padding:0;font:inherit;color:inherit;font-family:var(--font)}
+.mcard:hover{border-color:var(--line-2);transform:translateY(-4px) scale(1.015);box-shadow:0 18px 40px -12px rgba(0,0,0,.6),0 4px 12px -4px rgba(0,0,0,.4)}
+.mcard-img{position:absolute;inset:0;overflow:hidden;background:var(--card-2);border-radius:var(--radius-card)}
+.mcard-img::before{content:'';position:absolute;inset:0;z-index:0;background:linear-gradient(110deg,var(--card-2) 25%,#1b1d22 45%,var(--card-2) 65%);background-size:200% 100%;animation:imgShimmer 1.6s ease-in-out infinite}
+.mcard-img-bg{position:absolute;inset:0;z-index:1;background-size:cover;background-position:center}
+.mcard-img-fg{position:absolute;inset:0;z-index:2;width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+/* image hover-zoom removed per request */
+.mcard-img::after{content:'';position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(0deg,rgba(4,5,7,.92) 0%,rgba(4,5,7,.68) 14%,rgba(4,5,7,.28) 30%,rgba(4,5,7,0) 48%)}
+.mcard-live{position:absolute;top:10px;left:10px;z-index:5;display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border-radius:var(--radius-pill);background:rgba(6,7,9,.7);backdrop-filter:blur(4px);border:1px solid rgba(134,223,90,.5)}
+.mcard-live .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:livePulse 1.8s infinite}
+.mcard-live span{font-size:9px;letter-spacing:.09em;color:var(--lime);font-weight:700;font-family:var(--font)}
+.mcard-body{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:var(--sp-3);display:flex;flex-direction:column;gap:5px}
+.mcard-name{display:flex;align-items:center;gap:5px;font-weight:var(--fw-bold);font-size:15px;line-height:1.25;min-width:0;color:#fff;text-shadow:0 1px 8px rgba(0,0,0,.6)}
+.mcard-name>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mcard-sub{font-size:12.5px;line-height:1.35;color:#d5d8dc;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+.mcard-foot{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.mcard-foot-live{display:inline-flex;align-items:center;gap:5px;font-size:11.5px;font-weight:700;color:var(--lime);letter-spacing:.03em;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.mcard-foot-live .dot{width:6px;height:6px;border-radius:50%;background:var(--lime);animation:livePulse 1.8s infinite}
+.mcard-foot-live.is-red{color:var(--red)}
+.mcard-foot-live.is-red .dot{background:var(--red)}
+.mcard-timer{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:12.5px;font-weight:500;color:#fff;text-shadow:0 1px 6px rgba(0,0,0,.7)}
+.mcard-timer svg{flex-shrink:0}
+.ended-badge{display:inline-flex;align-items:center;padding:4px 9px;border-radius:var(--radius-pill);background:rgba(6,7,9,.7);backdrop-filter:blur(4px);border:1px solid var(--line-2);font-size:9px;font-weight:700;letter-spacing:.08em;color:#dfe1e3;white-space:nowrap;font-family:var(--font)}
+.mcard-badge-row{display:flex;align-items:center;gap:8px;font-size:12px;color:#d5d8dc;white-space:nowrap;overflow:hidden;text-shadow:0 1px 6px rgba(0,0,0,.6)}
+
+/* Auction card: title overlaid on artwork (client mockup) — same
+   image ratio as raffle cards for visual consistency site-wide */
+.acard-scrim{display:none}
+.acard-meta{position:static;z-index:auto}
+.acard-meta .mcard-name{margin-bottom:0}
+.acard .mcard-body{gap:6px}
+/* acard uses base overlay layout */
+
+/* Skeleton / empty allowlist cards */
+.skel-card{flex:1 1 220px;max-width:360px;aspect-ratio:1/1;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--card);padding:var(--sp-3);display:flex;flex-direction:column;justify-content:flex-end;gap:8px}
+.skel-line{height:8px;border-radius:5px;background:linear-gradient(110deg,var(--card-2) 25%,#1b1d22 45%,var(--card-2) 65%);background-size:200% 100%;animation:imgShimmer 1.8s ease-in-out infinite}
+.skel-line.w60{width:60%}
+.skel-line.w40{width:40%}
+.skel-dot{width:22px;height:22px;border-radius:50%;background:linear-gradient(110deg,var(--card-2) 25%,#1b1d22 45%,var(--card-2) 65%);background-size:200% 100%;animation:imgShimmer 1.8s ease-in-out infinite;position:absolute}
+.empty-card{flex:1 1 220px;max-width:360px;aspect-ratio:1/1;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--card);padding:var(--sp-4) var(--sp-3);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+.empty-card b{font-size:12px;font-weight:700}
+.empty-card p{font-size:11.5px;color:var(--sub);line-height:1.5}
+
+/* ── Buttons ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:var(--radius-btn);font-family:var(--font);font-weight:600;font-size:13.5px;cursor:pointer;text-decoration:none;transition:background var(--dur-fast),border-color var(--dur-fast),opacity var(--dur-fast);white-space:nowrap}
+.btn:focus-visible,.pill-tab:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,.mcard:focus-visible,.banner-dot:focus-visible,.banner-nav:focus-visible,.head-avatar:focus-visible,.head-bell:focus-visible,.blox-pill:focus-visible,.sec-link:focus-visible,.bs-foil-btn:focus-visible{outline:2px solid #cfd6df;outline-offset:2px}
+.btn-primary{background:#fff;color:#0a0c0f;padding:12px 20px}
+.btn-primary:hover{background:#dfe3e8}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--line-2);padding:12px 20px}
+.btn-ghost:hover{border-color:#3d4148;background:var(--card-2)}
+.btn-sm{padding:8px 16px;font-size:12.5px;border-radius:var(--radius-btn)}
+
+/* Legacy class names kept so modal JS keeps working — flat white */
+.bs-foil-btn{display:flex;align-items:center;justify-content:center;width:100%;border:none;border-radius:var(--radius-btn);background:#fff;color:#0a0c0f;cursor:pointer;text-decoration:none;transition:background var(--dur-fast)}
+.bs-foil-btn:hover{background:#dfe3e8}
+.bs-foil-btn-inner{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px 16px;font-weight:600;font-size:13.5px;color:#0a0c0f;font-family:var(--font)}
+.bs-foil-btn-inner svg{stroke:#0a0c0f!important}
+.bs-foil-btn-inner span{color:#4a5058!important}
+
+/* ── Badges (modal JS) ── */
+.bs-badge{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;padding:4px 8px;border-radius:var(--radius-chip);white-space:nowrap;border:1px solid var(--line-2);color:var(--sub);background:var(--card-2);font-family:var(--font)}
+.bs-badge-green{color:var(--lime);border-color:rgba(134,223,90,.4);background:rgba(134,223,90,.07)}
+.bs-badge-gold{color:var(--gold);border-color:rgba(230,195,122,.35);background:rgba(230,195,122,.08)}
+.bs-badge-red{color:var(--red);border-color:rgba(240,98,93,.35);background:rgba(240,98,93,.08)}
+.bs-badge-cyan,.bs-badge-violet,.bs-badge-gray{color:var(--sub)}
+.microlabel{font-size:var(--fs-micro);font-weight:var(--fw-medium);letter-spacing:.1em;color:var(--dim);text-transform:uppercase;font-family:var(--font)}
+
+/* ── Empty state ── */
+.bs-empty{text-align:center;padding:48px 24px;border:1px dashed var(--line-2);border-radius:var(--radius-card);color:var(--sub)}
+.bs-empty h3{font-size:var(--fs-h5);font-weight:var(--fw-bold);color:var(--text);margin-bottom:4px}
+.bs-empty p{font-size:13px;color:var(--sub);margin-bottom:16px}
+
+/* ── Stat strip ──
+   Centered vertical stack per cell (number over label) instead
+   of side-by-side baseline text — bigger number for real impact. */
+.stat-strip{display:flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--card);margin-top:var(--sp-4);overflow:hidden}
+.stat-cell{flex:1;min-width:140px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:var(--sp-1);padding:var(--sp-6) var(--sp-5);text-align:center;transition:background var(--dur-fast)}
+.stat-cell:hover{background:var(--card-2)}
+.stat-cell+.stat-cell{border-left:1px solid var(--line)}
+.stat-cell b{font-weight:700;font-size:var(--fs-h3);letter-spacing:-.01em;line-height:1}
+.stat-cell span{font-size:10.5px;font-weight:600;letter-spacing:.12em;color:var(--dim);text-transform:uppercase}
+
+/* ── Modal ── */
+.bs-modal-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(3,4,6,.8)}
+.bs-modal-overlay.open{display:flex}
+.bs-modal{width:480px;max-width:100%;max-height:92vh;overflow-y:auto;border-radius:var(--radius-card);background:var(--card);border:1px solid var(--line-2);animation:modalIn .18s ease}
+.bs-modal-img{position:relative;height:150px;overflow:hidden;background:var(--card-2)}
+.bs-modal-img .bs-modal-overlay-dark{position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(10,11,14,.95))}
+.bs-modal-close{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(5,6,8,.7);border:1px solid var(--line-2);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.bs-modal-close:hover{background:var(--card-2)}
+.bs-modal-meta{position:absolute;bottom:14px;left:18px;right:18px}
+.bs-modal-body{padding:20px}
+
+/* ── Responsive ── */
+@media (max-width:980px){
+  .bs-main{padding:var(--sp-3) var(--sp-4) var(--sp-16)}
+  .banner-content{padding:var(--sp-5) var(--sp-5) var(--sp-6);min-height:260px;max-width:100%}
+  .banner{min-height:260px}
+  .banner-nav{width:32px;height:32px}
+  .mcard{flex:0 0 300px;width:300px}
+}
+@media (max-width:640px){
+  .bs-main{padding:var(--sp-3) var(--sp-3) var(--sp-12)}
+  .page-head{align-items:flex-start}
+  .page-title{font-size:15px;white-space:normal;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;padding-top:2px}
+  .page-head-right{gap:6px}
+  .blox-pill{padding:0 8px;gap:6px;max-width:96px}
+  .blox-pill svg{display:none}
+  .blox-pill-val{font-size:11px}
+  .blox-pill-sub{display:none}
+  .card-row{gap:var(--sp-3)}
+  .mcard{flex:0 0 260px;width:260px}
+  .pill-tabs{overflow-x:auto;flex-wrap:nowrap;padding-bottom:4px;scrollbar-width:none}
+  .pill-tabs::-webkit-scrollbar{display:none}
+  .banner{min-height:200px}
+  .banner-content{min-height:200px;padding:var(--sp-4) var(--sp-4) var(--sp-5)}
+  .banner-nav{display:none}
+  .sec{margin-top:var(--sp-8)}
+  .sec-head{flex-wrap:wrap}
+}
+@media (max-width:360px){
+  .head-bell{display:none}
+}

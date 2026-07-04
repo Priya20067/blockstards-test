@@ -1,0 +1,162 @@
+/* ============================================================
+   bs_design.css — Blockstards New Design Shared Stylesheet
+   Include in every page <head>
+   ============================================================ */
+
+/* ── Reset + Custom Properties ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+@property --bgAngle{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes borderTravel{to{--bgAngle:360deg}}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(.7)}}
+@keyframes shineSweep{0%{transform:translateX(-160%) skewX(-20deg)}55%,100%{transform:translateX(360%) skewX(-20deg)}}
+@keyframes modalIn{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+html,body{background:#06070d;color:#eef1f8;font-family:'GT America',sans-serif}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#06070d}
+::-webkit-scrollbar-thumb{background:#1a1d2b;border-radius:9px}
+::-webkit-scrollbar-thumb:hover{background:#232838}
+input::placeholder,textarea::placeholder{color:#4a5266}
+select{appearance:none;-webkit-appearance:none}
+
+/* ── Layout ── */
+.bs-layout{display:flex;min-height:100vh;background:#06070d}
+
+/* ── Sidebar ── */
+.bs-sidebar{width:248px;flex-shrink:0;background:linear-gradient(180deg,#0a0c14,#06070d);border-right:1px solid #161a28;display:flex;flex-direction:column;position:sticky;top:0;height:100vh}
+.bs-sidebar-logo{padding:24px 20px;border-bottom:1px solid #12151f;display:flex;align-items:center;gap:12px}
+.bs-logo-name{font-weight:700;font-size:17px;letter-spacing:-.01em;line-height:1}
+.bs-logo-sub{font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.3em;color:#6fe3ff;margin-top:4px}
+.bs-sidebar-nav{padding:16px 12px;flex:1;display:flex;flex-direction:column;gap:4px;overflow-y:auto}
+.bs-nav-section{font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.22em;color:#4a5266;padding:8px 12px 4px}
+.bs-nav-link{position:relative;display:flex;align-items:center;gap:12px;padding:12px;border-radius:var(--radius-btn);text-decoration:none;font-size:13.5px;color:#aab2c5;transition:.18s}
+.bs-nav-link:hover{background:#10131d;color:#eef1f8}
+.bs-nav-link svg{flex-shrink:0}
+.bs-nav-active{font-weight:600;color:#eef1f8!important;background:linear-gradient(120deg,rgba(111,227,255,.14),rgba(182,156,255,.08))!important;border:1px solid rgba(111,227,255,.2)}
+.bs-nav-active svg{stroke:#6fe3ff}
+.bs-nav-indicator{position:absolute;left:-1px;top:50%;transform:translateY(-50%);width:3px;height:20px;border-radius:0 3px 3px 0;background:linear-gradient(#6fe3ff,#b69cff);box-shadow:0 0 10px #6fe3ff}
+.bs-sidebar-user{padding:12px;border-top:1px solid #12151f}
+.bs-user-card{display:flex;align-items:center;gap:12px;padding:12px;background:rgba(255,255,255,.03);border:1px solid #1a1d2b;border-radius:var(--radius-btn)}
+.bs-user-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,#6fe3ff,#b69cff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#06070d;flex-shrink:0;overflow:hidden}
+.bs-user-avatar img{width:100%;height:100%;object-fit:cover}
+.bs-user-name{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs-user-blox{font-family:'GT America Mono',monospace;font-size:10.5px;color:#6fe3ff;margin-top:4px;white-space:nowrap}
+.bs-discord-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:var(--radius-btn);background:#5865f2;color:#fff;font-family:'GT America Mono',monospace;font-size:12px;text-decoration:none;transition:.2s}
+.bs-discord-btn:hover{background:#4752c4}
+
+/* ── Main wrapper ── */
+.bs-main{flex:1;min-width:0;padding:var(--sp-4) var(--sp-6) var(--sp-16);max-width:1600px;width:100%;margin:0 auto}
+
+/* ── Topbar ── */
+.bs-topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;border-bottom:1px solid #12151f;margin-bottom:16px}
+.bs-breadcrumb{font-family:'GT America Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7a8398}
+.bs-breadcrumb .bc-active{color:#6fe3ff}
+.bs-topbar-right{display:flex;align-items:center;gap:12px}
+.bs-blox-pill{display:flex;align-items:center;gap:8px;padding:8px 16px;border:1px solid #1a1d2b;border-radius:var(--radius-pill);background:rgba(255,255,255,.03)}
+.bs-blox-dot{width:6px;height:6px;border-radius:50%;background:#6fe3ff;box-shadow:0 0 8px #6fe3ff}
+.bs-blox-val{font-family:'GT America Mono',monospace;font-size:12px;color:#bfe9f5;letter-spacing:.04em;white-space:nowrap}
+.bs-topbar-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(140deg,#6fe3ff,#b69cff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#06070d;overflow:hidden;text-decoration:none;flex-shrink:0}
+.bs-topbar-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* ── Page header ── */
+.bs-page-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.bs-page-title{font-weight:var(--fw-bold);font-size:var(--fs-h1);line-height:var(--lh-h1);letter-spacing:-.025em;margin-bottom:8px;background:linear-gradient(110deg,#eef1f8,#bfe9f5 50%,#b69cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.bs-page-sub{font-size:var(--fs-body);color:#7a8398}
+.bs-page-stats{display:flex;gap:16px}
+.bs-page-stat{text-align:right}
+.bs-page-stat-val{font-weight:700;font-size:26px;line-height:1}
+.bs-page-stat-label{font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.14em;color:#7a8398;margin-top:4px}
+.bs-divider{width:1px;background:#1a1d2b}
+
+/* ── Tabs ── */
+.bs-tabs{display:inline-flex;gap:4px;padding:4px;background:rgba(255,255,255,.03);border:1px solid #161a28;border-radius:var(--radius-btn)}
+.bs-tab{display:flex;align-items:center;gap:8px;padding:8px 16px;border-radius:var(--radius-btn);font-family:'GT America Mono',monospace;font-size:12px;letter-spacing:.04em;cursor:pointer;transition:.18s;text-decoration:none;color:#7a8398;border:1px solid transparent;white-space:nowrap}
+.bs-tab:hover{color:#eef1f8;background:rgba(255,255,255,.04)}
+.bs-tab.active{color:#eef1f8;background:rgba(111,227,255,.1);border-color:rgba(111,227,255,.25)}
+
+/* ── Cards ── */
+.bs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.bs-card{border-radius:var(--radius-card);overflow:hidden;border:1px solid #161a28;background:rgba(255,255,255,.02);transition:transform .2s,border-color .2s,box-shadow .2s;display:flex;flex-direction:column}
+.bs-card:hover{transform:translateY(-4px);border-color:var(--bs-card-accent,#6fe3ff);box-shadow:0 24px 52px -18px color-mix(in srgb,var(--bs-card-accent,#6fe3ff) 80%,transparent)}
+.bs-card-img{position:relative;overflow:hidden}
+.bs-card-img img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.bs-card:hover .bs-card-img img{transform:scale(1.06)}
+.bs-card-shine{position:absolute;inset:0;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.3),transparent 55%);mix-blend-mode:screen;pointer-events:none}
+.bs-pill{position:absolute;top:8px;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:var(--radius-pill);background:rgba(6,7,13,.6);backdrop-filter:blur(6px);font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.1em}
+.bs-pill-left{left:10px}
+.bs-pill-right{right:10px}
+.bs-live-dot{width:5px;height:5px;border-radius:50%;animation:livePulse 1.6s infinite}
+.bs-card-body{padding:16px;display:flex;flex-direction:column;flex:1}
+.bs-card-title{font-weight:var(--fw-medium);font-size:var(--fs-h5);margin-bottom:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bs-badge{display:inline-block;font-family:'GT America Mono',monospace;font-size:10px;padding:4px 8px;border-radius:var(--radius-pill);white-space:nowrap}
+.bs-badge-cyan{background:rgba(111,227,255,.12);color:#6fe3ff;border:1px solid rgba(111,227,255,.25)}
+.bs-badge-gold{background:rgba(228,197,144,.12);color:#e4c590;border:1px solid rgba(228,197,144,.25)}
+.bs-badge-violet{background:rgba(182,156,255,.12);color:#b69cff;border:1px solid rgba(182,156,255,.25)}
+.bs-badge-green{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+.bs-badge-gray{background:rgba(255,255,255,.05);color:#7a8398;border:1px solid #232838}
+
+/* ── Foil button ── */
+.bs-foil-btn{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;width:100%;padding:4px;border-radius:var(--radius-btn);background:conic-gradient(from var(--bgAngle),rgba(111,227,255,.14),#6fe3ff 15%,#b69cff 29%,rgba(111,227,255,.14) 48%,rgba(111,227,255,.14));animation:borderTravel 4.5s linear infinite;box-shadow:0 0 18px -3px rgba(111,227,255,.5),0 12px 26px -14px rgba(111,227,255,.45);cursor:pointer;transition:transform .2s,box-shadow .3s;text-decoration:none}
+.bs-foil-btn:hover{transform:translateY(-2px);box-shadow:0 0 38px -2px rgba(111,227,255,.85)}
+.bs-foil-btn-inner{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;border-radius:var(--radius-btn);background:linear-gradient(180deg,rgba(18,24,38,.9),rgba(9,12,22,.95));color:#eef1f8;font-family:'GT America Mono',monospace;font-size:12.5px;font-weight:500}
+
+/* ── Mini stats inside card ── */
+.bs-mini-stats{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid #12151f;border-bottom:1px solid #12151f;margin-bottom:12px}
+.bs-mini-stat-label{font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.1em;color:#5a6478;margin-bottom:4px}
+.bs-mini-stat-val{font-weight:600;font-size:15px}
+
+/* ── Progress bar ── */
+.bs-progress-wrap{margin-bottom:12px}
+.bs-progress-head{display:flex;justify-content:space-between;margin-bottom:4px;font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.1em;color:#5a6478}
+.bs-progress-track{height:5px;border-radius:4px;background:#12151f;overflow:hidden}
+.bs-progress-fill{height:100%;border-radius:4px}
+
+/* ── Empty state ── */
+.bs-empty{text-align:center;padding:64px 24px;color:#5a6478}
+.bs-empty-icon{font-size:36px;display:block;margin-bottom:12px}
+.bs-empty p{font-size:13px;color:#7a8398;margin-bottom:16px}
+
+/* ── Search ── */
+.bs-search{display:flex;align-items:center;gap:8px;padding:8px 16px;background:rgba(255,255,255,.03);border:1px solid #161a28;border-radius:var(--radius-btn);min-width:240px}
+.bs-search input{background:transparent;border:none;outline:none;font-family:'GT America Mono',monospace;font-size:12px;color:#eef1f8;width:100%}
+.bs-search input::placeholder{color:#5a6478}
+
+/* ── Modal ── */
+.bs-modal-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(4,5,10,.75);backdrop-filter:blur(6px)}
+.bs-modal-overlay.open{display:flex}
+.bs-modal{width:480px;max-width:100%;border-radius:var(--radius-card);overflow:hidden;background:linear-gradient(180deg,#0c0e18,#080a12);border:1px solid #232838;box-shadow:0 40px 90px -30px rgba(0,0,0,.8);animation:modalIn .22s cubic-bezier(.2,.9,.3,1)}
+.bs-modal-img{position:relative;height:120px;overflow:hidden}
+.bs-modal-img .bs-modal-overlay-dark{position:absolute;inset:0;background:linear-gradient(transparent,rgba(8,10,18,.9))}
+.bs-modal-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(6,7,13,.6);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;justify-content:center;cursor:pointer;backdrop-filter:blur(6px)}
+.bs-modal-meta{position:absolute;bottom:14px;left:18px}
+.bs-modal-body{padding:20px}
+
+/* ── Form fields ── */
+.bs-field{margin-bottom:16px}
+.bs-field label{display:block;font-family:'GT America Mono',monospace;font-size:10px;letter-spacing:.1em;color:#7a8398;margin-bottom:8px}
+.bs-field label .req{color:#f87171}
+.bs-input{width:100%;background:#0a0d18;border:1px solid #232838;border-radius:var(--radius-input);padding:12px 16px;font-size:14px;color:#eef1f8;outline:none;transition:border-color .16s}
+.bs-input:focus{border-color:#6fe3ff}
+.bs-input-mono{font-family:'GT America Mono',monospace}
+.bs-select-wrap{position:relative}
+.bs-select-wrap select{width:100%;background:#0a0d18;border:1px solid #232838;border-radius:var(--radius-input);padding:12px 16px;font-family:'GT America Mono',monospace;font-size:13px;color:#eef1f8;outline:none;cursor:pointer}
+.bs-select-wrap select:focus{border-color:#6fe3ff}
+.bs-select-arrow{position:absolute;right:14px;top:50%;transform:translateY(-50%);pointer-events:none}
+.bs-field-row{display:grid;gap:12px}
+.bs-field-row-2{grid-template-columns:1fr 1fr}
+.bs-field-row-3{grid-template-columns:1fr 1fr 1fr}
+
+/* ── Notice / alerts ── */
+.bs-notice{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--radius-btn);margin-bottom:24px}
+.bs-notice-gold{border:1px solid rgba(228,197,144,.25);background:rgba(228,197,144,.05)}
+.bs-notice-green{border:1px solid rgba(74,222,128,.3);background:rgba(74,222,128,.06)}
+.bs-notice-red{border:1px solid rgba(248,113,113,.3);background:rgba(248,113,113,.06)}
+.bs-notice-text{font-size:12.5px;line-height:1.6}
+
+/* ── Utility ── */
+.bs-divider-line{height:1px;background:#12151f;margin:20px 0}
+.bs-section-title{font-family:'GT America Mono',monospace;font-size:var(--fs-micro);letter-spacing:.14em;color:#5a6478;margin-bottom:16px}
+.bs-card-panel{border:1px solid #161a28;border-radius:var(--radius-card);background:rgba(255,255,255,.02);overflow:hidden}
+.bs-panel-header{padding:16px 20px;border-bottom:1px solid #12151f;display:flex;align-items:center;gap:8px;font-family:'GT America Mono',monospace;font-size:11px;letter-spacing:.12em;color:#aab2c5}
+.bs-section-head{display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.bs-section-line{height:1px;flex:1;background:#12151f}
