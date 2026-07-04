@@ -87,8 +87,8 @@ if (!$site_banner) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Home · Blockstards</title>
-<link rel="stylesheet" href="/bs_fonts.css?v=1783108465">
-<link rel="stylesheet" href="/bs_flat.css?v=1783108465">
+<link rel="stylesheet" href="/bs_fonts.css?v=1783164697">
+<link rel="stylesheet" href="/bs_flat.css?v=1783164697">
 <style>
   .login-cta{border:1px solid var(--line);border-radius:12px;background:var(--card);padding:26px 28px;margin-top:30px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .login-cta h2{font-family:var(--font);font-weight:700;font-size:18px;margin-bottom:4px}

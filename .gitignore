@@ -1,0 +1,16 @@
+# Secrets — never commit
+config.php
+auth/config.php
+
+# One-time / debug tools
+debug-errors.php
+backfill-banners.php
+php-error.log
+*.log
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+
+# Archives
+*.zip

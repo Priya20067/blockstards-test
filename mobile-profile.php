@@ -31,8 +31,8 @@ $m_active = 'profile';
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Profile · Blockstards</title>
-<link rel="stylesheet" href="/bs_fonts.css?v=1783108465">
-<link rel="stylesheet" href="/bs_mobile.css?v=1783108465">
+<link rel="stylesheet" href="/bs_fonts.css?v=1783164697">
+<link rel="stylesheet" href="/bs_mobile.css?v=1783164697">
 </head>
 <body>
 <?php require_once __DIR__.'/includes/bs_mobile_nav.php'; ?>

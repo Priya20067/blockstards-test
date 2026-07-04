@@ -44,7 +44,7 @@ $valid = $record_id && in_array($record_table, $allowed_tables, true);
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>Suggest Mint Date — Blockstards</title>
-<link rel="stylesheet" href="/bs_fonts.css?v=1783108465">
+<link rel="stylesheet" href="/bs_fonts.css?v=1783164697">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{background:#080808;color:#fff;font-family:'GT America Mono',monospace;font-size:14px;min-height:100vh;}

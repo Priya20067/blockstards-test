@@ -1,0 +1,182 @@
+<?php
+$page  = 'raffles';
+$title = 'Raffles';
+require_once __DIR__.'/../config.php';
+require_once __DIR__.'/../includes/header.php';
+
+$db     = db();
+$user   = get_user();
+$total  = $db->query("SELECT COUNT(*) FROM bs_raffles WHERE status='active'")->fetchColumn();
+$ended  = $db->query("SELECT COUNT(*) FROM bs_raffles WHERE status='ended'")->fetchColumn();
+$filter = $_GET['filter'] ?? 'active';
+$where  = $filter === 'ended' ? "status='ended'" : "status='active'";
+$raffles = $db->query("SELECT r.*, (SELECT COUNT(*) FROM bs_raffle_entries WHERE raffle_id=r.id) as entry_count FROM bs_raffles r WHERE {$where} ORDER BY r.end_date ASC")->fetchAll();
+
+$entered = [];
+if ($user) {
+    $stmt = $db->prepare("SELECT raffle_id FROM bs_raffle_entries WHERE discord_id=?");
+    $stmt->execute([$user['discord_id']]);
+    $entered = array_column($stmt->fetchAll(), 'raffle_id');
+}
+?>
+
+<div class="page-header">
+    <h1 class="page-title">Raffles</h1>
+    <p class="page-sub">Enter to win WL spots and exclusive NFT rewards</p>
+</div>
+
+<div class="stats-row">
+    <div class="stat-card"><div class="stat-val"><?= $total ?></div><div class="stat-label">Active Raffles</div></div>
+    <div class="stat-card"><div class="stat-val"><?= $ended ?></div><div class="stat-label">Completed</div></div>
+    <?php if ($user): ?><div class="stat-card"><div class="stat-val"><?= count($entered) ?></div><div class="stat-label">Your Entries</div></div><?php endif; ?>
+</div>
+
+<div class="filters">
+    <button class="filter-btn <?= $filter==='active'?'active':'' ?>" onclick="location.href='?filter=active'">Active</button>
+    <button class="filter-btn <?= $filter==='ended'?'active':'' ?>" onclick="location.href='?filter=ended'">Ended</button>
+</div>
+
+<?php if (empty($raffles)): ?>
+<div class="empty"><span class="empty-icon">🎰</span>No <?= $filter ?> raffles right now. Check back soon!</div>
+<?php else: ?>
+<div class="grid-auto">
+<?php foreach ($raffles as $r):
+    $is_entered = in_array($r['id'], $entered);
+    $is_ended   = $r['status'] === 'ended';
+?>
+<div class="raffle-card" onclick="<?= !$is_ended ? "openRaffle({$r['id']})" : '' ?>">
+    <div class="raffle-img"><?php if ($r['image_url']): ?><img src="<?= htmlspecialchars($r['image_url']) ?>" alt=""><?php else: ?><span>🎟</span><?php endif; ?></div>
+    <div class="raffle-body">
+        <div class="raffle-title"><?= htmlspecialchars($r['title']) ?></div>
+        <div class="raffle-meta">
+            <span class="badge badge-<?= $r['chain']==='Ethereum'?'blue':'green' ?>"><?= $r['chain'] ?></span>
+            <?php if ($r['entry_type']==='blox'): ?><span class="badge badge-gold"><?= $r['blox_cost'] ?> $BLOX</span><?php else: ?><span class="badge badge-green">Free</span><?php endif; ?>
+            <?php if ($is_entered): ?><span class="badge badge-green">✓ Entered</span><?php endif; ?>
+            <?php if ($is_ended): ?><span class="badge badge-gray">Ended</span><?php endif; ?>
+        </div>
+        <?php if ($r['description']): ?><div style="font-size:11px;color:var(--g6);line-height:1.5;margin-top:4px"><?= htmlspecialchars(substr($r['description'],0,100)) ?><?= strlen($r['description'])>100?'...':'' ?></div><?php endif; ?>
+    </div>
+    <div class="raffle-footer">
+        <div class="raffle-spots"><strong><?= $r['entry_count'] * 4 ?></strong> entries · <strong><?= $r['spots'] ?></strong> spots</div>
+        <div class="raffle-timer"><?= $is_ended ? 'Ended' : time_left($r['end_date']) ?></div>
+    </div>
+</div>
+<?php endforeach; ?>
+</div>
+<?php endif; ?>
+
+<div class="modal-overlay" id="raffle-modal">
+    <div class="modal">
+        <div class="modal-header"><div class="modal-title" id="modal-title">Raffle</div><button class="modal-close" onclick="closeModal('raffle-modal')">✕</button></div>
+        <div class="modal-body" id="modal-body"></div>
+        <div class="modal-footer" id="modal-footer"></div>
+    </div>
+</div>
+
+<script>
+const userId = <?= $user ? "'".$user['discord_id']."'" : 'null' ?>;
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+async function openRaffle(id) {
+    openModal('raffle-modal');
+    document.getElementById('modal-body').innerHTML = '<div style="text-align:center;padding:30px;color:var(--g6)">Loading...</div>';
+    document.getElementById('modal-footer').innerHTML = '';
+    try {
+        const res  = await fetch('/bs-api/raffle.php?id='+id);
+        const data = await res.json();
+        const r    = data.raffle;
+        const ent  = data.entered;
+        const wins = data.winners || [];
+        document.getElementById('modal-title').textContent = r.title;
+
+        let winnersHtml = '';
+        if (wins.length) {
+            winnersHtml = `<div style="margin-top:14px;padding:14px;background:var(--bg2);border:1px solid var(--border);border-radius:8px">
+                <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--g5);margin-bottom:10px">🏆 Winners</div>
+                ${wins.map(w => `
+                <div style="padding:8px 0;border-bottom:1px solid var(--border)">
+                    <div style="font-size:12px;color:var(--gold);font-weight:600">${w.username || '...'+w.discord_id.slice(-4)}</div>
+                    ${w.eth_wallet ? `<div style="font-size:10px;color:var(--g6);font-family:'DM Mono',monospace">ETH: ${w.eth_wallet.slice(0,8)}...${w.eth_wallet.slice(-6)}</div>` : ''}
+                    ${w.sol_wallet ? `<div style="font-size:10px;color:var(--g6);font-family:'DM Mono',monospace">SOL: ${w.sol_wallet.slice(0,8)}...${w.sol_wallet.slice(-6)}</div>` : ''}
+                    ${!w.eth_wallet && !w.sol_wallet ? `<div style="font-size:10px;color:var(--g5)">No wallet linked</div>` : ''}
+                </div>`).join('')}
+            </div>`;
+        }
+
+        document.getElementById('modal-body').innerHTML = `
+            ${r.image_url?`<img src="${r.image_url}" style="width:100%;height:180px;object-fit:cover;border-radius:8px;margin-bottom:16px">`:''}
+            <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+                <span class="badge badge-${r.chain==='Ethereum'?'blue':'green'}">${r.chain||'ETH'}</span>
+                <span class="badge badge-${r.entry_type==='blox'?'gold':'green'}">${r.entry_type==='blox'?r.blox_cost+' $BLOX':'Free'}</span>
+                ${r.status==='ended'?'<span class="badge badge-gray">Ended</span>':'<span class="badge badge-green">Live</span>'}
+            </div>
+            ${r.description?`<p style="color:var(--g7);font-size:12px;margin-bottom:14px;line-height:1.6">${r.description}</p>`:''}
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px">
+                <div class="card card-sm"><div class="stat-label">Spots</div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:18px">${r.spots}</div></div>
+                <div class="card card-sm"><div class="stat-label">Entries</div><div style="font-family:Syne,sans-serif;font-weight:700;font-size:18px">${r.entry_count * 4}</div></div>
+                <div class="card card-sm"><div class="stat-label">Chain</div><div style="font-size:12px;margin-top:4px;color:var(--g7)">${r.chain||'ETH'}</div></div>
+            </div>
+            ${r.end_date?`<div style="font-size:11px;color:var(--g6);margin-bottom:10px">${r.status==='ended'?'Ended':'Ends'}: <strong style="color:var(--white)">${new Date(r.end_date).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})}</strong></div>`:''}
+            ${r.mint_url?`<a href="${r.mint_url}" target="_blank" style="display:inline-block;margin-bottom:10px;font-size:11px;color:var(--gold)">View Mint Page →</a>`:''}
+            ${winnersHtml}
+        `;
+        const footer = document.getElementById('modal-footer');
+        const isStaff = <?php echo (is_staff() ? 'true' : 'false'); ?>;
+        if (!userId) {
+            footer.innerHTML = '<button class="btn btn-discord" onclick="showLoginPopup()">Sign in with Discord to Enter</button>';
+        } else if (r.status==='ended') {
+            footer.innerHTML = '<span style="color:var(--g6);font-size:12px">Raffle ended</span>';
+            if (isStaff) footer.innerHTML += ` <button class="btn btn-sm" style="margin-left:8px;background:rgba(99,102,241,.15);color:#a5b4fc;border:1px solid rgba(99,102,241,.3)" onclick="endRaffle(${r.id},this)">Re-announce Winners</button>`;
+        } else if (ent) {
+            footer.innerHTML = '<span style="color:var(--green);font-size:12px">✓ Already Entered — Good luck! 🎉</span>';
+            if (isStaff) footer.innerHTML += ` <button class="btn btn-sm" style="margin-left:8px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.3)" onclick="endRaffle(${r.id},this)">End Raffle</button>`;
+        } else {
+            const costLabel = r.entry_type==='blox' ? ` — ${r.blox_cost} $BLOX` : ' Free';
+            footer.innerHTML = `<button class="btn btn-gold" onclick="enterRaffle(${r.id},this)">Enter Raffle${costLabel}</button>`;
+            if (isStaff) footer.innerHTML += ` <button class="btn btn-sm" style="margin-left:8px;background:rgba(239,68,68,.1);color:#f87171;border:1px solid rgba(239,68,68,.3)" onclick="endRaffle(${r.id},this)">End Raffle</button>`;
+        }
+    } catch(e) {
+        document.getElementById('modal-body').innerHTML = '<div style="color:var(--red);padding:20px">Failed to load raffle.</div>';
+    }
+}
+async function endRaffle(id, btn) {
+    if (!confirm('End this raffle and pick winners now?')) return;
+    btn.textContent = 'Ending...'; btn.disabled = true;
+    try {
+        const res = await fetch('/bs-api/end_raffle.php', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({raffle_id:id})});
+        const data = await res.json();
+        if (data.success) {
+            document.getElementById('modal-footer').innerHTML = '<span style="color:var(--green);font-size:12px">✓ Raffle ended! Winners announced.</span>';
+            setTimeout(()=>location.reload(), 2000);
+        } else {
+            alert(data.message||'Failed'); btn.textContent='End Raffle'; btn.disabled=false;
+        }
+    } catch(e) { btn.textContent='End Raffle'; btn.disabled=false; }
+}
+async function enterRaffle(id, btn) {
+    btn.textContent = 'Entering...'; btn.disabled = true;
+    try {
+        const res  = await fetch('/bs-api/enter_raffle.php', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({raffle_id:id})});
+        const data = await res.json();
+        if (data.success) {
+            let msg = '✓ You\'re in! Good luck 🎉';
+            if (data.new_balance !== null && data.new_balance !== undefined) {
+                msg += ` | Balance: ${parseFloat(data.new_balance).toFixed(4)} $BLOX`;
+            }
+            document.getElementById('modal-footer').innerHTML = `<span style="color:var(--green);font-size:12px">${msg}</span>`;
+            // Update entry count on card without full reload
+            setTimeout(()=>location.reload(), 2000);
+        } else {
+            alert(data.message||'Failed to enter'); btn.textContent='Enter Raffle'; btn.disabled=false;
+        }
+    } catch(e) { btn.textContent='Enter Raffle'; btn.disabled=false; }
+}
+
+document.getElementById('raffle-modal').addEventListener('click', function(e) {
+    if (e.target === this) closeModal('raffle-modal');
+});
+</script>
+
+<?php require_once __DIR__.'/../includes/footer.php'; ?>

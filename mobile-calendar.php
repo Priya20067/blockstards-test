@@ -154,8 +154,8 @@ function cal_grid(string $yr, string $mo, string $first_day, string $today, arra
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <title>Calendar · Blockstards</title>
-<link rel="stylesheet" href="/bs_fonts.css?v=1783108465">
-<link rel="stylesheet" href="/bs_mobile.css?v=1783108465">
+<link rel="stylesheet" href="/bs_fonts.css?v=1783164697">
+<link rel="stylesheet" href="/bs_mobile.css?v=1783164697">
 <style>
 .m-cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:16px}
 .m-cal-hdr{font-family:'GT America Mono',monospace;font-size:8.5px;letter-spacing:.1em;color:#5a6478;text-align:center;padding:6px 0}
