@@ -1,0 +1,178 @@
+/* ============================================================
+   bs_fonts.css — Blockstards Global Design System
+   1) GT America webfonts (pulled from opensea.io's own asset
+      bundle) — used site-wide for text.
+   2) Design tokens: spacing scale, radius scale, dark premium
+      color palette, and type scale — inspired by OpenSea's UI.
+   Loaded on every page. Values only — no selectors touched here,
+   so nothing about site functionality changes.
+   ============================================================ */
+
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America Mono';
+  src:url('/assets/fonts/GT-America-Mono-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America Mono';
+  src:url('/assets/fonts/GT-America-Mono-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}
+
+/* ── Design tokens ───────────────────────────────────────────
+   Every stylesheet on the site (bs_flat.css, bs_design.css,
+   bs_admin.css, bs_mobile.css, inline styles) reads from these
+   instead of hardcoding its own numbers. Change a value here and
+   it updates everywhere at once.
+   ───────────────────────────────────────────────────────────── */
+:root{
+  /* Spacing scale — only these steps should be used for padding,
+     margin, and gap anywhere on the site. */
+  --sp-1:4px;
+  --sp-2:8px;
+  --sp-3:12px;
+  --sp-4:16px;
+  --sp-5:20px;
+  --sp-6:24px;
+  --sp-8:32px;
+  --sp-10:40px;
+  --sp-12:48px;
+  --sp-16:64px;
+
+  /* Radius scale — component-specific, per spec */
+  --radius-btn:14px;    /* buttons */
+  --radius-card:18px;   /* cards / tiles */
+  --radius-hero:20px;   /* hero / banner */
+  --radius-input:14px;  /* inputs, selects, textareas */
+  --radius-pill:9999px; /* nav pills, tab pills, badges — fully round, not part of the 4 above */
+  --radius-chip:8px;    /* small badges/chips that aren't full pills */
+
+  /* Fonts */
+  --font:'GT America',-apple-system,BlinkMacSystemFont,'Helvetica Neue',Arial,sans-serif;
+  --mono:'GT America Mono','Roboto Mono',monospace;
+
+  /* Type scale — font-size / line-height pairs.
+     h1..h6 = page & section headings, body = default UI text,
+     sm/xs = secondary text, micro = eyebrow/overline labels. */
+  --fs-h1:40px;    --lh-h1:1.1;
+  --fs-h2:32px;    --lh-h2:1.15;
+  --fs-h3:24px;    --lh-h3:1.2;
+  --fs-h4:20px;    --lh-h4:1.25;
+  --fs-h5:17px;    --lh-h5:1.3;
+  --fs-body:14px;  --lh-body:1.5;
+  --fs-sm:13px;    --lh-sm:1.45;
+  --fs-xs:12px;    --lh-xs:1.4;
+  --fs-micro:10px; --lh-micro:1.3;
+  --fw-regular:400;
+  --fw-medium:500;
+  --fw-bold:700;
+
+  /* ── Dark premium color palette (OpenSea-inspired layering) ──
+     Structure mirrors OpenSea's dark mode: a near-black base with
+     progressively lighter elevation surfaces, a muted text
+     hierarchy, and a small set of saturated accents reserved for
+     status/brand — not scattered everywhere. */
+  --bg:#06070d;          /* page base */
+  --surface-1:#0a0b0e;   /* cards, panels */
+  --surface-2:#121317;   /* nested surfaces, hovered rows */
+  --surface-3:#18181b;   /* active/pressed surfaces */
+  --border-1:#1a1c21;    /* default hairline border */
+  --border-2:#26282d;    /* stronger border / hover border */
+
+  --text-primary:#fdfdfd;
+  --text-secondary:#a5a5a5;
+  --text-tertiary:#75797d;
+  --text-on-accent:#0a0c0f;
+
+  /* Brand accents — Blockstards' identity, kept distinct from
+     OpenSea's blue since these carry the club's own meaning
+     (LIVE status, verified badge, ended state, premium/gold). */
+  --accent-green:#43cf2e;   /* live / success */
+  --accent-lime:#86df5a;    /* live glow */
+  --accent-red:#f0625d;     /* ended / destructive */
+  --accent-gold:#e6c37a;    /* premium / $BLOX */
+  --accent-purple:#793afb;  /* verified / featured */
+
+  /* OpenSea-style blue kept available for anywhere a neutral
+     "informational" accent (links, focus rings) is wanted
+     without implying live/ended/premium status. */
+  --accent-blue:#2081e2;
+
+  /* Motion — 3 durations cover every transition on the site.
+     fast = hover/press feedback, base = transforms & shadows,
+     slow = fades/carousel. One easing curve everywhere. */
+  --dur-fast:.15s;
+  --dur-base:.25s;
+  --dur-slow:.5s;
+  --ease:cubic-bezier(.2,.9,.3,1);
+
+  /* Z-index scale — every stacked element on the site should use
+     one of these instead of an arbitrary number. */
+  --z-base:1;
+  --z-sticky:50;
+  --z-dropdown:60;
+  --z-overlay:100;
+  --z-toast:200;
+}
+
+
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America';
+  src:url('/assets/fonts/GT-America-Standard-Bold.woff2') format('woff2');
+  font-weight:700;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America Mono';
+  src:url('/assets/fonts/GT-America-Mono-Regular.woff2') format('woff2');
+  font-weight:400;
+  font-style:normal;
+  font-display:swap;
+}
+@font-face{
+  font-family:'GT America Mono';
+  src:url('/assets/fonts/GT-America-Mono-Medium.woff2') format('woff2');
+  font-weight:500;
+  font-style:normal;
+  font-display:swap;
+}

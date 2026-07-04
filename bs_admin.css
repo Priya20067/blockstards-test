@@ -1,0 +1,152 @@
+/* bs_admin.css — Blockstards Admin Shared Styles */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+@property --bgAngle{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes borderTravel{to{--bgAngle:360deg}}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.25;transform:scale(.7)}}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+html,body{background:#06070d;color:#eef1f8;font-family:'GT America',sans-serif}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:#06070d}
+::-webkit-scrollbar-thumb{background:#1a1d2b;border-radius:var(--radius-chip)}
+input::placeholder,textarea::placeholder{color:#4a5266}
+select{appearance:none;-webkit-appearance:none}
+
+/* Layout */
+.adm-layout{display:flex;min-height:100vh;background:#06070d}
+.adm-main{flex:1;min-width:0;padding:20px 32px 64px;max-width:1400px;margin:0 auto;width:100%}
+
+/* Topbar */
+.adm-topbar{display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid #12151f;margin-bottom:24px}
+.adm-breadcrumb{font-family:'GT America Mono',monospace;font-size:11px;letter-spacing:.16em;color:#7a8398}
+.adm-breadcrumb .bc-active{color:#b69cff}
+.adm-topbar-right{display:flex;align-items:center;gap:12px}
+.adm-bot-pill{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid rgba(74,222,128,.25);border-radius:var(--radius-pill);background:rgba(74,222,128,.06)}
+.adm-bot-dot{width:6px;height:6px;border-radius:50%;background:#4ade80;animation:livePulse 1.8s infinite}
+.adm-bot-label{font-family:'GT America Mono',monospace;font-size:11px;color:#86efac;letter-spacing:.06em}
+.adm-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(140deg,#b69cff,#6fe3ff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#06070d;overflow:hidden}
+.adm-avatar img{width:100%;height:100%;object-fit:cover}
+
+/* Page header */
+.adm-page-header{display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:24px}
+.adm-page-title{font-weight:700;font-size:34px;letter-spacing:-.025em;margin-bottom:4px}
+.adm-page-sub{font-size:13px;color:#7a8398}
+
+/* Stat cards */
+.adm-stats{display:grid;gap:12px;margin-bottom:24px}
+.adm-stats-4{grid-template-columns:repeat(4,1fr)}
+.adm-stats-3{grid-template-columns:repeat(3,1fr)}
+.adm-stats-2{grid-template-columns:repeat(2,1fr)}
+.adm-stat{padding:20px 20px;border:1px solid #161a28;border-radius:var(--radius-btn);background:rgba(255,255,255,.02)}
+.adm-stat-val{font-weight:700;font-size:30px;line-height:1}
+.adm-stat-label{font-family:'GT America Mono',monospace;font-size:9.5px;letter-spacing:.14em;color:#7a8398;margin-top:8px}
+
+/* Notice */
+.adm-notice{display:flex;align-items:flex-start;gap:8px;padding:12px 12px;border-radius:var(--radius-btn);font-size:12.5px;margin-bottom:16px}
+.adm-notice-green{background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.25);color:#86efac}
+.adm-notice-red{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.25);color:#fca5a5}
+.adm-notice-gold{background:rgba(228,197,144,.08);border:1px solid rgba(228,197,144,.25);color:#e4c590}
+
+/* Table */
+.adm-table-wrap{border:1px solid #161a28;border-radius:var(--radius-btn);overflow:hidden;background:rgba(255,255,255,.02);margin-bottom:20px}
+.adm-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.adm-table thead th{font-family:'GT America Mono',monospace;font-size:9px;letter-spacing:.12em;color:#5a6478;padding:12px 16px;border-bottom:1px solid #12151f;text-align:left;white-space:nowrap}
+.adm-table tbody tr{border-bottom:1px solid #0d1018;transition:background .15s;cursor:pointer}
+.adm-table tbody tr:last-child{border-bottom:none}
+.adm-table tbody tr:hover{background:rgba(255,255,255,.03)}
+.adm-table td{padding:12px 16px;vertical-align:middle}
+
+/* Row layout (non-table) */
+.adm-row{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid #0d1018;transition:background .15s}
+.adm-row:last-child{border-bottom:none}
+.adm-row:hover{background:rgba(255,255,255,.03)}
+
+/* Badges */
+.adm-badge{display:inline-block;font-family:'GT America Mono',monospace;font-size:9px;padding:4px 8px;border-radius:var(--radius-hero);white-space:nowrap}
+.adm-badge-green{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.25)}
+.adm-badge-cyan{background:rgba(111,227,255,.12);color:#6fe3ff;border:1px solid rgba(111,227,255,.25)}
+.adm-badge-violet{background:rgba(182,156,255,.12);color:#b69cff;border:1px solid rgba(182,156,255,.25)}
+.adm-badge-gold{background:rgba(228,197,144,.12);color:#e4c590;border:1px solid rgba(228,197,144,.25)}
+.adm-badge-red{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.25)}
+.adm-badge-gray{background:rgba(255,255,255,.05);color:#7a8398;border:1px solid #232838}
+.adm-badge-orange{background:rgba(251,146,60,.12);color:#fb923c;border:1px solid rgba(251,146,60,.3)}
+
+/* Buttons */
+.adm-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:8px 16px;border-radius:var(--radius-btn);font-family:'GT America Mono',monospace;font-size:12px;font-weight:500;cursor:pointer;border:none;transition:.18s;text-decoration:none;white-space:nowrap}
+.adm-btn-green{background:rgba(74,222,128,.12);color:#4ade80;border:1px solid rgba(74,222,128,.3)}
+.adm-btn-green:hover{background:rgba(74,222,128,.22)}
+.adm-btn-red{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.28)}
+.adm-btn-red:hover{background:rgba(248,113,113,.2)}
+.adm-btn-ghost{background:rgba(255,255,255,.04);color:#aab2c5;border:1px solid #232838}
+.adm-btn-ghost:hover{background:rgba(255,255,255,.08);color:#eef1f8}
+.adm-btn-sm{padding:4px 12px;font-size:11px;border-radius:var(--radius-chip)}
+.adm-foil-btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;padding:4px;border-radius:var(--radius-btn);background:conic-gradient(from var(--bgAngle),rgba(182,156,255,.14),#b69cff 15%,#6fe3ff 29%,rgba(182,156,255,.14) 48%,rgba(182,156,255,.14));animation:borderTravel 5s linear infinite;cursor:pointer;border:none;text-decoration:none}
+.adm-foil-inner{display:flex;align-items:center;gap:8px;padding:12px 20px;border-radius:var(--radius-btn);background:linear-gradient(180deg,rgba(18,24,38,.9),rgba(9,12,22,.95));color:#eef1f8;font-family:'GT America Mono',monospace;font-size:12.5px;font-weight:500;white-space:nowrap}
+
+/* Form fields */
+.adm-field{margin-bottom:16px}
+.adm-field label{display:block;font-family:'GT America Mono',monospace;font-size:9.5px;letter-spacing:.1em;color:#7a8398;margin-bottom:8px}
+.adm-field .req{color:#f87171}
+.adm-input{width:100%;background:#0a0d18;border:1px solid #232838;border-radius:var(--radius-btn);padding:12px 12px;font-size:13.5px;color:#eef1f8;outline:none;transition:border-color .16s}
+.adm-input:focus{border-color:#b69cff}
+.adm-input-mono{font-family:'GT America Mono',monospace}
+.adm-select-wrap{position:relative}
+.adm-select-wrap select{width:100%;background:#0a0d18;border:1px solid #232838;border-radius:var(--radius-btn);padding:12px 12px;font-family:'GT America Mono',monospace;font-size:13px;color:#eef1f8;outline:none;cursor:pointer}
+.adm-select-wrap select:focus{border-color:#b69cff}
+.adm-select-arrow{position:absolute;right:13px;top:50%;transform:translateY(-50%);pointer-events:none}
+.adm-field-row{display:grid;gap:12px}
+.adm-field-row-2{grid-template-columns:1fr 1fr}
+.adm-field-row-3{grid-template-columns:1fr 1fr 1fr}
+
+/* Card panel */
+.adm-panel{border:1px solid #161a28;border-radius:var(--radius-card);background:rgba(255,255,255,.02);overflow:hidden}
+.adm-panel-hdr{padding:12px 20px;border-bottom:1px solid #12151f;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.adm-panel-hdr-label{font-family:'GT America Mono',monospace;font-size:11px;letter-spacing:.12em;color:#aab2c5}
+.adm-panel-body{padding:16px 20px}
+
+/* Thumbnail in table */
+.adm-thumb{width:32px;height:36px;border-radius:var(--radius-chip);object-fit:cover;flex-shrink:0;background:#1a1d2b}
+.adm-avatar-sm{width:30px;height:30px;border-radius:50%;object-fit:cover;background:linear-gradient(140deg,#b69cff,#6fe3ff);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;color:#06070d;overflow:hidden;flex-shrink:0}
+
+/* Action buttons in table */
+.adm-action-btns{display:flex;gap:4px;flex-shrink:0}
+.adm-icon-btn{width:30px;height:30px;border-radius:var(--radius-chip);display:flex;align-items:center;justify-content:center;cursor:pointer;border:none;transition:.15s}
+.adm-icon-btn-green{background:rgba(74,222,128,.12);border:1px solid rgba(74,222,128,.3)}
+.adm-icon-btn-green:hover{background:rgba(74,222,128,.25)}
+.adm-icon-btn-red{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.28)}
+.adm-icon-btn-red:hover{background:rgba(248,113,113,.2)}
+.adm-icon-btn-ghost{background:rgba(255,255,255,.04);border:1px solid #232838}
+.adm-icon-btn-ghost:hover{background:rgba(255,255,255,.09)}
+
+/* Divider */
+.adm-divider{height:1px;background:#12151f;margin:20px 0}
+
+/* Modal */
+.adm-modal-overlay{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(4,5,10,.78);backdrop-filter:blur(8px)}
+.adm-modal-overlay.open{display:flex}
+.adm-modal{width:540px;max-width:100%;border-radius:var(--radius-card);overflow:hidden;background:linear-gradient(180deg,#0d1018,#080a12);border:1px solid #232838;box-shadow:0 40px 90px -30px rgba(0,0,0,.8);animation:modalIn .22s cubic-bezier(.2,.9,.3,1)}
+.adm-modal-hdr{padding:16px 20px;border-bottom:1px solid #12151f;display:flex;align-items:center;justify-content:space-between}
+.adm-modal-title{font-weight:600;font-size:16px}
+.adm-modal-close{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#aab2c5;font-size:16px;line-height:1}
+.adm-modal-close:hover{background:rgba(248,113,113,.15);color:#f87171}
+.adm-modal-body{padding:20px}
+
+/* Filter tabs */
+.adm-filter-tabs{display:inline-flex;gap:4px;padding:4px;background:rgba(255,255,255,.03);border:1px solid #161a28;border-radius:var(--radius-btn);margin-bottom:16px}
+.adm-filter-tab{padding:8px 16px;border-radius:var(--radius-chip);font-family:'GT America Mono',monospace;font-size:11.5px;color:#7a8398;text-decoration:none;border:1px solid transparent;transition:.15s;white-space:nowrap}
+.adm-filter-tab:hover{color:#eef1f8;background:rgba(255,255,255,.04)}
+.adm-filter-tab.active{color:#eef1f8;background:rgba(182,156,255,.1);border-color:rgba(182,156,255,.25)}
+
+/* Guild selector */
+.adm-guild-sel{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.adm-guild-btn{padding:8px 12px;background:rgba(255,255,255,.03);border:1px solid #232838;border-radius:var(--radius-chip);cursor:pointer;font-family:'GT America Mono',monospace;font-size:11.5px;color:#7a8398;transition:.15s}
+.adm-guild-btn:hover{border-color:#b69cff;color:#eef1f8}
+.adm-guild-btn.active{border-color:#b69cff;color:#c9b8ff;background:rgba(182,156,255,.08)}
+
+/* Toggle switch */
+.adm-toggle{position:relative;display:inline-block;width:38px;height:22px;flex-shrink:0}
+.adm-toggle input{opacity:0;width:0;height:0}
+.adm-toggle-slider{position:absolute;inset:0;background:#232838;border-radius:var(--radius-hero);transition:.25s;cursor:pointer}
+.adm-toggle-slider::before{content:'';position:absolute;height:16px;width:16px;left:3px;bottom:3px;background:#5a6478;border-radius:50%;transition:.25s}
+.adm-toggle input:checked+.adm-toggle-slider{background:rgba(74,222,128,.25);border:1px solid rgba(74,222,128,.5)}
+.adm-toggle input:checked+.adm-toggle-slider::before{transform:translateX(16px);background:#4ade80}
